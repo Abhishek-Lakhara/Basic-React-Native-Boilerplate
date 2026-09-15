@@ -12,7 +12,7 @@ import {
 import React, { useCallback, useRef, useEffect, useState } from 'react';
 import { themeType } from '@/interface/theme.type';
 import { fontFamily, fontSize, Ionicons } from '@/utils/fontIcon.utils';
-import { GOOGLE_API_KEY } from '@/service/config';
+import { GOOGLE_API_KEY } from '@/services/config';
 import { useThemedStyles } from '@/hooks/useThemedStyles';
 import { useThemeColor } from '@/hooks/useThemeColor';
 

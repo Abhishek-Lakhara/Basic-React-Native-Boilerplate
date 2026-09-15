@@ -6,8 +6,8 @@ import { themeType } from '@/interface/theme.type';
 import { navigateAndSimpleReset } from '@/utils/navigation.utils';
 import { onLogout } from '@/utils/helper.utils';
 import { useThemedStyles } from '@/hooks/useThemedStyles';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useGeneralStore } from '@/store/generalStore';
+import { useAppDispatch } from '@/store/hooks';
+import { setIsUnauthorized } from '@/store/slices/generalSlice';
 
 type props = {
   visible: boolean;
@@ -15,9 +15,8 @@ type props = {
 };
 
 export default function UnAutheriseModal({ visible, onClose }: props) {
-  const { setIsUnAutharized } = useGeneralStore();
+  const dispatch = useAppDispatch();
   const styles = useThemedStyles(createStyle);
-  const themeColor = useThemeColor();
   return (
     <CustomModal visibleModel={visible} closeModal={onClose}>
       <View style={{ alignItems: 'center', width: '100%' }}>
@@ -27,7 +26,7 @@ export default function UnAutheriseModal({ visible, onClose }: props) {
           title="Login"
           onPress={() => {
             onLogout();
-            setIsUnAutharized(false);
+            dispatch(setIsUnauthorized(false));
             setTimeout(() => {
               navigateAndSimpleReset('AuthStack');
             }, 500);

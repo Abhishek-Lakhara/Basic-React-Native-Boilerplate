@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { themeType } from '@/interface';
-import { useThemeStore } from '@/store/themeStore';
+import { useAppSelector } from '@/store/hooks';
+import { selectThemeColor } from '@/store/selectors';
 
 export const useThemedStyles = <T>(styleFn: (theme: themeType) => T): T => {
-  const theme = useThemeStore(state => state.themeColor);
-  return useMemo(() => styleFn(theme), [theme]);
+  const theme = useAppSelector(selectThemeColor);
+  return useMemo(() => styleFn(theme), [styleFn, theme]);
 };

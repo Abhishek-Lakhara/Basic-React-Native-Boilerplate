@@ -25,7 +25,7 @@ module.exports = {
           '@Localization': './src/localization',
           '@Navigation': './src/navigation',
           '@Screens': './src/screens',
-          '@Service': './src/service',
+          '@Service': './src/services',
           '@Store': './src/store',
           '@Utils': './src/utils',
         },

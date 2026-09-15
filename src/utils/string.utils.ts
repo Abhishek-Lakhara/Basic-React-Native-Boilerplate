@@ -1,4 +1,4 @@
-import { ASSETS_URL } from '@/service/config';
+import { ASSETS_URL } from '@/services/config';
 
 class StringUtils {
   static capitalize(str: string) {

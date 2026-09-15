@@ -7,9 +7,10 @@ import { themeType } from '@/interface/theme.type';
 import { navigateAndSimpleReset } from './navigation.utils';
 import messaging from '@react-native-firebase/messaging';
 import { stopNotificationSound } from './notification.utils';
-import { clearTokens, client } from '@/service/rest';
 import { ENotificationType } from '@/interface/notification.type';
-import { useAuthStore } from '@/store/authStore';
+import { baseApi } from '@/services/api/baseApi';
+import { store } from '@/store';
+import { resetAuth } from '@/features/auth/authSlice';
 
 export const setAsyncStorage = async (key: string, value: any) => {
   if (!key) {
@@ -60,15 +61,17 @@ export const showToast = (msg: string) => {
 };
 
 export const onLogout = async () => {
-  // const topic = `user_${store.getState().AuthManager?.user?._id}`;
+  // const topic = `user_${store.getState().auth.user?.id}`;
   // console.log('topic unscbscribe successfully: ', topic);
   // messaging().subscribeToTopic(topic);
   // await messaging().deleteToken();
   // await AsyncStorage.removeItem(ASYNC_KEYS.FCM_TOKEN);
-  useAuthStore.getState().resetUser();
-  clearTokens();
-  delete client.defaults.headers.common['Authorization'];
-  AsyncStorage.removeItem(ASYNC_KEYS.ACCESS_TOKEN);
+  store.dispatch(resetAuth());
+  store.dispatch(baseApi.util.resetApiState());
+  await AsyncStorage.multiRemove([
+    ASYNC_KEYS.ACCESS_TOKEN,
+    ASYNC_KEYS.REFRESH_TOKEN,
+  ]);
   navigateAndSimpleReset('AuthStack');
 };
 

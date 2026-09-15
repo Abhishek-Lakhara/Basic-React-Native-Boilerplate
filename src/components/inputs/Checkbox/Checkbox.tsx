@@ -1,5 +1,4 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
   TextStyle,
@@ -15,7 +14,6 @@ import {
 import { themeType } from '@/interface/theme.type';
 import { useThemedStyles } from '@/hooks/useThemedStyles';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useThemeStore } from '@/store/themeStore';
 
 type props = {
   label?: string;
@@ -32,20 +30,22 @@ export default function Checkbox({
   value = false,
   onChange,
   label = '',
-  activeColor = useThemeStore.getState().themeColor.primary,
-  inactiveColor = useThemeStore.getState().themeColor.gray,
+  activeColor,
+  inactiveColor,
   containerStyle,
   checkboxStyle,
   labelStyle,
 }: props) {
   const styles = useThemedStyles(createStyle);
   const themeColor = useThemeColor();
+  const resolvedActiveColor = activeColor ?? themeColor.primary;
+  const resolvedInactiveColor = inactiveColor ?? themeColor.gray;
   return (
     <View style={[styles.container, containerStyle]}>
       <MaterialDesignIcons
         name={value ? 'checkbox-marked' : 'checkbox-blank-outline'}
         size={30}
-        color={value ? activeColor : inactiveColor}
+        color={value ? resolvedActiveColor : resolvedInactiveColor}
         onPress={() => onChange(!value)}
         style={[checkboxStyle]}
       />

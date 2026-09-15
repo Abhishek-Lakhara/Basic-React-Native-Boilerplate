@@ -1,5 +1,6 @@
-import { useThemeStore } from '@/store/themeStore';
+import { useAppSelector } from '@/store/hooks';
+import { selectThemeColor } from '@/store/selectors';
 
 export const useThemeColor = () => {
-  return useThemeStore(state => state.themeColor);
+  return useAppSelector(selectThemeColor);
 };

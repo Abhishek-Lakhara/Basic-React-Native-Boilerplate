@@ -1,7 +1,7 @@
-import { useThemeStore } from '@/store/themeStore';
 import React from 'react';
 import { View, StyleSheet, ViewStyle, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface SafeAreaWrapperProps {
   children: React.ReactNode;
@@ -15,15 +15,17 @@ const SafeAreaWrapper = ({
   children,
   useSafeArea = true,
   style,
-  statusBarColor = useThemeStore.getState().themeColor.backgroundColor,
+  statusBarColor,
   StatusBarStyle = 'light-content',
 }: SafeAreaWrapperProps) => {
+  const themeColor = useThemeColor();
   const Wrapper = useSafeArea ? SafeAreaView : View;
+  const resolvedStatusBarColor = statusBarColor ?? themeColor.backgroundColor;
 
   return (
-    <View style={[styles.outer, { backgroundColor: statusBarColor }]}>
+    <View style={[styles.outer, { backgroundColor: resolvedStatusBarColor }]}>
       <StatusBar
-        backgroundColor={statusBarColor}
+        backgroundColor={resolvedStatusBarColor}
         barStyle={StatusBarStyle}
         translucent={!useSafeArea} // Key for Android 33+
       />

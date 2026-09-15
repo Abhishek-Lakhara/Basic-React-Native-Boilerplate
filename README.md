@@ -1,5 +1,55 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+## State and API architecture
+
+This project uses feature-first architecture with Redux Toolkit for client state and RTK Query for server state:
+
+- `src/app/` contains app navigation and global providers.
+- `src/features/` contains domain screens, endpoint definitions, and feature behavior.
+- `src/components/`, `src/hooks/`, and `src/utils/` contain shared UI and utilities.
+- `src/store/index.ts` configures the typed store and `redux-persist`.
+- Feature state lives beside its feature; `src/store/slices/` contains shared theme and general state.
+- `src/services/` owns cross-feature API, config, and socket services.
+- `src/services/api/baseApi.ts` owns API headers and 401 token refresh.
+- RTK Query cache is intentionally not persisted; it is invalidated or refetched as needed.
+
+Example feature layout:
+
+```text
+src/features/auth/
+  screens/
+  authApi.ts
+  authSlice.ts
+src/features/home/
+  screens/
+src/app/
+  navigation/
+  providers/
+```
+
+Use typed Redux hooks in components:
+
+```tsx
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectAuth } from '@/store/selectors';
+import { setUserRole } from '@/features/auth/authSlice';
+
+const auth = useAppSelector(selectAuth);
+const dispatch = useAppDispatch();
+dispatch(setUserRole('seeker'));
+```
+
+Use generated RTK Query hooks for API calls:
+
+```tsx
+import { useSendOtpMutation } from '@/features/auth/authApi';
+
+const [sendOtp, { isLoading, error }] = useSendOtpMutation();
+await sendOtp({ phone: '+919999999999', countryCode: '91' }).unwrap();
+```
+
+Do not put server responses into Redux slices manually. Add an endpoint to the relevant feature API and use its query/mutation hook. Auth tokens are persisted through Redux; production deployments should move sensitive token storage to Keychain/Keystore-backed storage.
+
 # Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
